@@ -8,3 +8,11 @@ I study Kotlin with Jetpack Compse by watching  Philipp Lackner's Jetpack Compos
 ![image](https://user-images.githubusercontent.com/52899340/135008281-2b9d3986-8b56-413a-a0ea-ccb783af26fd.png)
 - When you want to apply font, you have to create font directory to __res -> New -> Android Resource Directory -> Resource type : font -> copy font's ttf file and paste them on directory__
 - Font's file name has to be just small letter and - can't be used on name.
+- Download font file from [Google Fonts](https://fonts.google.com/)
+
+## Part 6
+- **State** - remember & mutableStateOf
+![image](https://user-images.githubusercontent.com/52899340/135186612-36c8a650-5138-4d5f-9698-ce29f7eb9937.png)
+If I click upper part of the screen, under part's background color is changed randomly.
+
+
