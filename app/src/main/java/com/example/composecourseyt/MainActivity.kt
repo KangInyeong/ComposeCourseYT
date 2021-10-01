@@ -3,11 +3,10 @@ package com.example.composecourseyt
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -43,50 +42,42 @@ import kotlin.random.Random
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //7차시 - 텍스트 필드 만들기
+        //8차시 - 리스트 구현
+        /** 방법1. Column에 반복문을 넣고 scrollState를 설정
+         *  방법2. items를 많이(5000개) 만들고 LazyColumn을 활용
+         *  방법3. itemsIndexed를 사용하여 list에 있는 string들을 아이템으로 활용 가능
+         */
         setContent {
-            val scaffoldState = rememberScaffoldState()
-            var textFieldState by remember { // to prevent the value is reset on recomposition
-                mutableStateOf("")
-            }
-            val scope = rememberCoroutineScope()
-
-                //scaffold는 layering compose이며, Jetpack compose에 이미 존재하는 material design composnent을 포함.
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    scaffoldState = scaffoldState
+//            val scrollState = rememberScrollState(scrollState) //scroll state 설정하기
+            LazyColumn{ //lazy loading이 가능하도록 함.
+                itemsIndexed(
+                    listOf("This", "is", "Jetpack", "Compose")
                 ){
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                    index, string ->
+                    Text(
+//                        text = "Item $i",
+//                        text = "Item $it",
+                        text = string,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 30.dp)
-                    ){
-                        TextField(
-                            value = textFieldState,
-                            label = {
-                                Text("Enter your name")
-                            },
-                            onValueChange = {
-                                textFieldState = it
-                            },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = {
-                            scope.launch { //Warning! Never launch a coroutine directly in the composable, it's only okay in callbacks such as an onClickListener
-                                scaffoldState.snackbarHostState.showSnackbar("Hello $textFieldState")
-                            }
-                        }) {
-                            Text("Please greet me")
-                        }
-                    }
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp)
+                    )
                 }
+//                items(5000){
 
-
+//                }
+            }
+//            Column(
+//                modifier = Modifier.verticalScroll()
+//            ){
+//                for(i in 1..50) {
+//
+//                }
+            }
         }
     }
-}
+
 
