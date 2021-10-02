@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -35,6 +36,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
 import com.example.composecourseyt.ui.theme.ComposeCourseYTTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -42,42 +47,56 @@ import kotlin.random.Random
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //8차시 - 리스트 구현
-        /** 방법1. Column에 반복문을 넣고 scrollState를 설정
-         *  방법2. items를 많이(5000개) 만들고 LazyColumn을 활용
-         *  방법3. itemsIndexed를 사용하여 list에 있는 string들을 아이템으로 활용 가능
-         */
-        setContent {
-//            val scrollState = rememberScrollState(scrollState) //scroll state 설정하기
-            LazyColumn{ //lazy loading이 가능하도록 함.
-                itemsIndexed(
-                    listOf("This", "is", "Jetpack", "Compose")
-                ){
-                    index, string ->
-                    Text(
-//                        text = "Item $i",
-//                        text = "Item $it",
-                        text = string,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp)
-                    )
-                }
-//                items(5000){
+        //9차시 - ConstraintLayout을 활용하여 UI 구현
+        /** ConstraintLayout은 gradle에 implementation 코드를 추가해야 한다.
+         *  초록 상자와 빨간 상자를 활용해 constraintlayout을 다양하게 활용해보자.
+         *  IMG1. fillToConstraints로 여백을 채울 수 있다.
+         *  IMG2. createHorizontalChain으로 채인을 만들고 채인의 스타일도 설정할 수 있다.
+         *  IMG3. guideline을 만들면 해당 설정치만큼의 빈공간이 생긴다.
+         * */
 
-//                }
+        setContent {
+            val constraints = ConstraintSet {
+                val greenBox = createRefFor("greenbox")
+                val redBox = createRefFor("redbox")
+                val guideline = createGuidelineFromTop(0.5f)
+
+                constrain(greenBox) {
+                    top.linkTo(guideline)
+//                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
+                }
+
+                constrain(redBox) {
+                    top.linkTo(parent.top)
+                    start.linkTo(greenBox.end)
+                    end.linkTo(parent.end)
+                    width = Dimension.value(100.dp)
+//                    width = Dimension.fillToConstraints // 남은 공간 다 채워짐
+                    height = Dimension.value(100.dp)
+                }
+                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed) // 두 box를 채인으로 형성. chainStyle을 Packed로 하면 중앙에 함께 배치됨.
+
             }
-//            Column(
-//                modifier = Modifier.verticalScroll()
-//            ){
-//                for(i in 1..50) {
-//
-//                }
+
+            ConstraintLayout(constraints, modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .background(Color.Green)
+                        .layoutId("greenbox")
+                ) // Box를 greebox로 지정
+
+                Box(
+                    modifier = Modifier
+                        .background(Color.Red)
+                        .layoutId("redbox")
+                ) // Box를 redbox로 지정
+
             }
         }
     }
+}
 
 
