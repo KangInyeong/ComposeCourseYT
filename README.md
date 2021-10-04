@@ -24,3 +24,8 @@ By using **Scaffold** and **Coroutine** , I can easily create snackbar which pop
 In first way, I can use **"Column"**. If I want to scroll the list, I have to use modifier with **"verticalScroll"** and **"scrollState"** with **"for"** loop. <br>
 In second way, I can use **"LazyColumn"** with **"items"** instead of loop statement. <br>
 In third way, I can use **"itemsIndexed"** to show each string in list as item with **"listOf"** which has string contents .
+
+## Part 9 - ConstraintLayout
+![Untitled (1)](https://user-images.githubusercontent.com/52899340/135755204-6870a63f-0cfd-42bf-ae9f-9b21d1b8d3b2.png)
+
+
