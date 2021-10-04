@@ -2,6 +2,8 @@ package com.example.composecourseyt
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -41,62 +43,73 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import com.example.composecourseyt.ui.theme.ComposeCourseYTTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //9차시 - ConstraintLayout을 활용하여 UI 구현
-        /** ConstraintLayout은 gradle에 implementation 코드를 추가해야 한다.
-         *  초록 상자와 빨간 상자를 활용해 constraintlayout을 다양하게 활용해보자.
-         *  IMG1. fillToConstraints로 여백을 채울 수 있다.
-         *  IMG2. createHorizontalChain으로 채인을 만들고 채인의 스타일도 설정할 수 있다.
-         *  IMG3. guideline을 만들면 해당 설정치만큼의 빈공간이 생긴다.
-         * */
+        //10차시 - Side Effect와 Effect Handlers
 
         setContent {
-            val constraints = ConstraintSet {
-                val greenBox = createRefFor("greenbox")
-                val redBox = createRefFor("redbox")
-                val guideline = createGuidelineFromTop(0.5f)
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
 
-                constrain(greenBox) {
-                    top.linkTo(guideline)
-//                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    width = Dimension.value(100.dp)
-                    height = Dimension.value(100.dp)
+            Scaffold(scaffoldState = scaffoldState) {
+//                var counter by remember {
+//                    mutableStateOf(0)
+//                }
+                var counter = produceState(initialValue = 0) {
+                    delay(3000L) // 3초가 지나면
+                    value = 4 // 값이 4로 바뀜.
+                }
+                if(counter.value % 5 == 0 && counter.value > 0){
+//                    scope.launch {
+//                        scaffoldState.snackbarHostState.showSnackbar("Hello") //showSnackbar를 위해서 코루틴 사용해야 함. -> scope 만들고 넣어줌.
+//                    }
+
+                    LaunchedEffect(key1 = scaffoldState.snackbarHostState){
+                        scaffoldState.snackbarHostState.showSnackbar("Hello") //5로 나누어떨어지는 경우에만 스낵바 보임. 나머지에서는 사라져.
+                    }
                 }
 
-                constrain(redBox) {
-                    top.linkTo(parent.top)
-                    start.linkTo(greenBox.end)
-                    end.linkTo(parent.end)
-                    width = Dimension.value(100.dp)
-//                    width = Dimension.fillToConstraints // 남은 공간 다 채워짐
-                    height = Dimension.value(100.dp)
+//                Button(onClick = {counter++}) {
+//                    Text("Click me: $counter")
+//                }
+                Button(onClick = {}) {
+                    Text("Click me: ${counter.value}")
                 }
-                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed) // 두 box를 채인으로 형성. chainStyle을 Packed로 하면 중앙에 함께 배치됨.
-
-            }
-
-            ConstraintLayout(constraints, modifier = Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier
-                        .background(Color.Green)
-                        .layoutId("greenbox")
-                ) // Box를 greebox로 지정
-
-                Box(
-                    modifier = Modifier
-                        .background(Color.Red)
-                        .layoutId("redbox")
-                ) // Box를 redbox로 지정
 
             }
         }
     }
 }
 
-
+//var i = 0
+//
+//@Composable
+//fun MyComposable(backPressedDispatcher: OnBackPressedDispatcher) {
+////    SideEffect {
+////        i++
+////    }
+//
+//    val callback = remember {
+//        object : OnBackPressedCallback(true){
+//            override fun handleOnBackPressed() {
+//                // Do something
+//            }
+//        }
+//    }
+//
+//    DisposableEffect(key1 = backPressedDispatcher){
+//        backPressedDispatcher.addCallback(callback)
+//        onDispose {
+//            callback.remove()
+//        }
+//    }
+//
+//    Button(onClick = { }){
+//        Text(text = "Click me")
+//    }
+//}
