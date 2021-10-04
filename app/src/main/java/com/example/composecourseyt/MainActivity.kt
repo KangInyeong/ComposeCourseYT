@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,66 +52,61 @@ import kotlin.random.Random
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //10차시 - Side Effect와 Effect Handlers
+        //11차시 - 단순한 애니메이션 구현
+
+        /**
+         * Box 안에 버튼이 있는데 버튼을 누르면 Box의 크기가 50dp씩 커진다.
+         * animateDpAsState를 사용해서 smoothly 하게 크기를 증가시킬 수 있다.
+         */
 
         setContent {
-            val scaffoldState = rememberScaffoldState()
-            val scope = rememberCoroutineScope()
+            var sizeState by remember {mutableStateOf(200.dp)}
+            val size by animateDpAsState(
+                //want to animate towards owr size state
+                targetValue = sizeState,
+//                tween(
+//                    // 300milliseconds 뒤에 시작해서 3000milliseconds 동안 커짐.
+//                    durationMillis = 3000,
+//                    delayMillis = 300,
+//                    easing = LinearOutSlowInEasing
+//                )
 
-            Scaffold(scaffoldState = scaffoldState) {
-//                var counter by remember {
-//                    mutableStateOf(0)
+//                spring(Spring.DampingRatioHighBouncy) // 푸딩처럼 팝핑하면서 커짐.
+
+//                keyframes {
+////                처음에는 빠르게, 그 다음 느리게
+//                    durationMillis = 5000
+//                    sizeState at 0 with LinearEasing
+//                    sizeState * 1.5f at 1000 with FastOutLinearInEasing
+//                    sizeState * 2f at 5000
 //                }
-                var counter = produceState(initialValue = 0) {
-                    delay(3000L) // 3초가 지나면
-                    value = 4 // 값이 4로 바뀜.
-                }
-                if(counter.value % 5 == 0 && counter.value > 0){
-//                    scope.launch {
-//                        scaffoldState.snackbarHostState.showSnackbar("Hello") //showSnackbar를 위해서 코루틴 사용해야 함. -> scope 만들고 넣어줌.
-//                    }
 
-                    LaunchedEffect(key1 = scaffoldState.snackbarHostState){
-                        scaffoldState.snackbarHostState.showSnackbar("Hello") //5로 나누어떨어지는 경우에만 스낵바 보임. 나머지에서는 사라져.
-                    }
-                }
+                tween(
+                    durationMillis = 1000
+                )
+            )
+            val infiniteTransition = rememberInfiniteTransition()
+            val color by infiniteTransition.animateColor(
+                initialValue = Color.Red,
+                targetValue = Color.Green,
+                animationSpec = infiniteRepeatable(
+                    tween(durationMillis = 2000),
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
 
-//                Button(onClick = {counter++}) {
-//                    Text("Click me: $counter")
-//                }
-                Button(onClick = {}) {
-                    Text("Click me: ${counter.value}")
+            Box(modifier = Modifier
+                .size(size)
+                .background(color),
+                contentAlignment = Alignment.Center){
+                Button(onClick = {
+                    sizeState += 50.dp
+                })
+                {
+                    Text("Increase Size")
                 }
-
             }
+
         }
     }
 }
-
-//var i = 0
-//
-//@Composable
-//fun MyComposable(backPressedDispatcher: OnBackPressedDispatcher) {
-////    SideEffect {
-////        i++
-////    }
-//
-//    val callback = remember {
-//        object : OnBackPressedCallback(true){
-//            override fun handleOnBackPressed() {
-//                // Do something
-//            }
-//        }
-//    }
-//
-//    DisposableEffect(key1 = backPressedDispatcher){
-//        backPressedDispatcher.addCallback(callback)
-//        onDispose {
-//            callback.remove()
-//        }
-//    }
-//
-//    Button(onClick = { }){
-//        Text(text = "Click me")
-//    }
-//}
