@@ -53,65 +53,10 @@ import kotlin.random.Random
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //12차시 - 프로그래스 바 ( canvas 커스텀 )
+        //네비게이션 -> build.gradle 파일에 코드 추가
 
         setContent {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ){
-                CircularProgressBar(percentage = 0.7f, number = 100)
-            }
+            Navigation()
         }
     }
-}
-
-@Composable
-fun CircularProgressBar(
-    percentage: Float,
-    number: Int,
-    fontSize: TextUnit = 28.sp,
-    radius: Dp = 50.dp,
-    color: Color = Color.Green,
-    strokeWidth: Dp = 8.dp, //두께
-    animDuration: Int = 1000,
-    animDelay: Int = 0
-) {
-    var animationPlayed by remember {
-        mutableStateOf(false) //애니메이션 시작할 때 boolean 사용
-    }
-    val curPercentage = animateFloatAsState(
-        targetValue = if(animationPlayed) percentage else 0f, //0%에서 시작해서 animationPlayed가 true가 되면 percentage 반환
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = animDelay
-        )
-    )
-
-    LaunchedEffect(key1 = true){
-        animationPlayed = true
-    }
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.size(radius * 2f)
-    ){
-        Canvas(modifier = Modifier.size(radius * 2f)){
-            drawArc(
-                color = color,
-                -90f,//시작각도
-                360 * curPercentage.value,//전체각도
-                useCenter = false,
-                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
-            )
-        }
-        Text(
-            text = (curPercentage.value * number).toInt().toString(),
-            color = Color.Black,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Bold
-        )
-
-    }
-
 }
