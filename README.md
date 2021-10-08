@@ -48,5 +48,9 @@ I could give animation to the box by using **animateDpAsState** with using **twe
 
 ## Animated Circular Progress Bar
 ![Untitled](https://user-images.githubusercontent.com/52899340/136124713-7fdbaa42-5c93-4c09-b11d-a3299b484aac.png)
+<br>
 
 ## Navigation
+![image](https://user-images.githubusercontent.com/52899340/136579638-6a5d7d4e-4f4d-4c4f-a8f0-d925061db400.png)
+I made Kotlin File as Navigation which has Navigation, MainScreen, and DetailScreen composable function to show each UI.
+Also, I made Sealed Class as Screen which has main and detail screen in the form of object.
