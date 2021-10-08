@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.*
+import androidx.navigation.compose.NavHost //이거 추가되면 오류가 사라지네,,,
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
