@@ -52,11 +52,14 @@ I could give animation to the box by using **animateDpAsState** with using **twe
 
 ## Navigation
 ![image](https://user-images.githubusercontent.com/52899340/136579638-6a5d7d4e-4f4d-4c4f-a8f0-d925061db400.png)
-I made Kotlin File as Navigation which has Navigation, MainScreen, and DetailScreen composable function to show each UI.
-Also, I made Sealed Class as Screen which has main and detail screen in the form of object.
+I made Kotlin File as Navigation which has Navigation, MainScreen, and DetailScreen composable function to show each UI.  
+I have to use __NavHostController__ and __NavHost__ to use Navigation.  
+Also, I made __Sealed Class__ as Screen which has main and detail screen in the form of object.
+<br>
 
 ## BottomNavigation with Badges
 ![image](https://user-images.githubusercontent.com/52899340/136818759-610bfae7-eebc-4811-8e66-f9aa417a6075.png)
-By using Scaffold, I made bottomBar to put BottomNavigation with its items which are "Home", "Chat", "Settings".
+By using __Scaffold__, I made bottomBar to put BottomNavigation with its items which are "Home", "Chat", "Settings".  
 When I chlick the badges(items), I can go each screen.
+<br>
 
